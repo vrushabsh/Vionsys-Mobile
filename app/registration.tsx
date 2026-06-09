@@ -34,6 +34,7 @@ export default function Registration() {
         <View style={styles.formCard}>
           <View style={styles.tabIndicatorContainer}>
             <Text style={styles.tabText}>Basic Info</Text>
+            
             <View style={styles.activeLine} />
           </View>
 
