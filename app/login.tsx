@@ -1,3 +1,5 @@
+import { Feather, MaterialIcons } from "@expo/vector-icons";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   ImageBackground,
@@ -12,18 +14,53 @@ import {
   View,
 } from "react-native";
 
-import { Feather, MaterialIcons } from "@expo/vector-icons";
-
 export default function SignInScreen() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [secureText, setSecureText] = useState(true);
 
+  const handleSignIn = async () => {
+    if (!email || !password) {
+      alert("Please enter email and password");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://taxiuat.vionsys.com/TaxiApplicationUAT/api/rider/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+          }),
+        }
+      );
+
+      const result = await response.json();
+
+      console.log("Login Response:", result);
+
+      if (result.status === "SUCCESS") {
+        alert("Login Successful");
+        router.push("/Home");
+      } else {
+        alert("Invalid Email or Password");
+      }
+    } catch (error) {
+      console.log("Login Error:", error);
+      alert("Something went wrong");
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
-      {/* Top Image Section */}
+      {/* Background Image updated to RiderImage.jpg */}
       <ImageBackground
-        source={require("../assets/images/hero-background.webp")}
+        source={require("../assets/images/RiderImage.jpg")}
         resizeMode="cover"
         style={styles.imageSection}
       >
@@ -37,7 +74,6 @@ export default function SignInScreen() {
         </View>
       </ImageBackground>
 
-      {/* Bottom Form Section */}
       <KeyboardAvoidingView
         style={styles.keyboardView}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -52,11 +88,14 @@ export default function SignInScreen() {
 
             <View style={styles.tabIndicator} />
 
-            {/* Email */}
             <Text style={styles.label}>EMAIL</Text>
 
             <View style={styles.inputContainer}>
-              <MaterialIcons name="mail-outline" size={20} color="#8e8e93" />
+              <MaterialIcons
+                name="mail-outline"
+                size={20}
+                color="#8e8e93"
+              />
 
               <TextInput
                 style={styles.input}
@@ -69,11 +108,14 @@ export default function SignInScreen() {
               />
             </View>
 
-            {/* Password */}
             <Text style={styles.label}>PASSWORD</Text>
 
             <View style={styles.inputContainer}>
-              <MaterialIcons name="lock-outline" size={20} color="#8e8e93" />
+              <MaterialIcons
+                name="lock-outline"
+                size={20}
+                color="#8e8e93"
+              />
 
               <TextInput
                 style={styles.input}
@@ -84,7 +126,9 @@ export default function SignInScreen() {
                 onChangeText={setPassword}
               />
 
-              <TouchableOpacity onPress={() => setSecureText(!secureText)}>
+              <TouchableOpacity
+                onPress={() => setSecureText(!secureText)}
+              >
                 <Feather
                   name={secureText ? "eye-off" : "eye"}
                   size={20}
@@ -93,26 +137,39 @@ export default function SignInScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* Button */}
-            <TouchableOpacity style={styles.button} activeOpacity={0.8}>
+            <TouchableOpacity
+              style={styles.button}
+              activeOpacity={0.8}
+              onPress={handleSignIn}
+            >
               <Text style={styles.buttonText}>Sign In</Text>
 
-              <MaterialIcons name="arrow-forward" size={20} color="#fff" />
+              <MaterialIcons
+                name="arrow-forward"
+                size={20}
+                color="#fff"
+              />
             </TouchableOpacity>
 
-            {/* Forgot Password */}
             <TouchableOpacity style={styles.forgotBtn}>
-              <Text style={styles.forgotText}>FORGOT PASSWORD?</Text>
+              <Text style={styles.forgotText}>
+                FORGOT PASSWORD?
+              </Text>
             </TouchableOpacity>
 
             <View style={styles.divider} />
 
-            {/* Footer */}
             <View style={styles.footerRow}>
-              <Text style={styles.footerText}>Don't have an account?</Text>
+              <Text style={styles.footerText}>
+                Don't have an account?
+              </Text>
 
-              <TouchableOpacity>
-                <Text style={styles.linkText}> Create Account</Text>
+              <TouchableOpacity
+                onPress={() => router.push("/registration")}
+              >
+                <Text style={styles.linkText}>
+                  Create Account
+                </Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -167,7 +224,7 @@ const styles = StyleSheet.create({
 
   keyboardView: {
     flex: 1,
-    marginTop: -40, // Card overlaps image
+    marginTop: -40, // Keeps the card overlapping perfectly on the bottom of the image
   },
 
   scrollContainer: {
@@ -180,7 +237,6 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     borderRadius: 24,
     padding: 24,
-
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
