@@ -58,9 +58,8 @@ export default function SignInScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      {/* Background Image updated to RiderImage.jpg */}
       <ImageBackground
-        source={require("../assets/images/RiderImage.jpg")}
+        source={require("../assets/images/hero-background.webp")}
         resizeMode="cover"
         style={styles.imageSection}
       >
@@ -224,7 +223,7 @@ const styles = StyleSheet.create({
 
   keyboardView: {
     flex: 1,
-    marginTop: -40, // Keeps the card overlapping perfectly on the bottom of the image
+    marginTop: -40,
   },
 
   scrollContainer: {
